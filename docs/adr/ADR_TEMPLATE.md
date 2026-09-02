@@ -1,7 +1,7 @@
 # ADR-XXXX — Decision Title
 
 **Status:** Proposed | Accepted | Deprecated | Superseded  
-**Date:** YYYY-MM-DD  
+**Date:** DD-MM-YYYY  
 **Owners:**
 
 ## Context
