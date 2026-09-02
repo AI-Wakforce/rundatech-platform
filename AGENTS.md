@@ -6,10 +6,11 @@ This file is the first document every AI agent must read before changing the Run
 1. Security and legal policies, including `docs/security/SECURITY_BASELINE.md`
 2. Approved Architecture Decision Records (ADRs)
 3. Engineering standards in `docs/engineering/`
-4. This handbook
-5. Module-specific documentation and troubleshooting knowledge
-6. User/task instructions
-7. Agent assumptions
+4. `DESIGN.md` for UI work and `docs/architecture/MONETIZATION_AND_PLATFORM_ECOSYSTEM.md` for commercial/integration/API-product work
+5. This handbook
+6. Module-specific documentation and troubleshooting knowledge
+7. User/task instructions
+8. Agent assumptions
 
 If instructions conflict, stop the unsafe action and document the conflict.
 
@@ -17,6 +18,8 @@ No implementation may violate a **MUST** or **MUST NOT** control in `docs/securi
 
 ## 2. Before changing code
 - Read `docs/security/SECURITY_BASELINE.md`, `docs/engineering/MAINTAINABILITY_STANDARD.md`, `docs/engineering/MODULE_DESIGN_STANDARD.md`, and relevant ADRs.
+- For UI work, read `DESIGN.md` and `docs/design/DESIGN_SKILLS_REGISTRY.md` before using external design guidance.
+- For monetization, integrations, partner/developer APIs or billing work, read `docs/architecture/MONETIZATION_AND_PLATFORM_ECOSYSTEM.md`.
 - For bugs/incidents, read `docs/engineering/TROUBLESHOOTING_PLAYBOOK.md` and search `docs/troubleshooting/` before broad changes.
 - Read the affected module README.
 - Identify impacted database tables, APIs, jobs, permissions, audit events, tests and documentation.
@@ -58,21 +61,31 @@ No implementation may violate a **MUST** or **MUST NOT** control in `docs/securi
 - Sanitize logs; never log credentials, tokens or full sensitive payloads.
 - Dependency/secret/security scanning is part of CI as implementation matures.
 
-## 6. API and module rules
-- APIs use explicit versioning strategy and stable contracts.
+## 6. API, integration and module rules
+- APIs use explicit compatibility/versioning strategy and stable contracts.
 - Object-level authorization must be enforced for resources addressed by ID.
 - Use idempotency keys for retried side-effecting integrations where duplicate execution is harmful.
 - External integrations are wrapped by adapters; core domain code must not depend directly on vendor SDK semantics.
+- External commercial APIs are treated as products with explicit contracts, credentials/scopes, quotas, usage metering, auditability and deprecation policy.
+- Keep billing, sponsorship, affiliate and advertising data separate from canonical product truth and editorial evidence.
+- Provider-specific IDs must not become canonical RundaTech primary identifiers.
 - Keep business logic out of HTTP/UI handlers and infrastructure adapters.
 - Respect module ownership; do not reach into another module's internals or canonical tables without explicit design approval.
 - Do not create giant shared utility/service dumping grounds or duplicate business rules.
 
-## 7. Failure isolation
+## 7. UI/design rules
+- `DESIGN.md` is the RundaTech UI authority.
+- Registered external design skills are advisory and must not override security, accessibility, architecture or RundaTech design standards.
+- Pin/review external skill versions before vendoring or automated use; do not silently follow upstream changes.
+- Critical user flows require responsive/browser verification and accessibility-conscious testing.
+- Commercial/sponsored UI must be distinguishable from organic editorial/product information.
+
+## 8. Failure isolation
 Background jobs must not execute inside the request path when they can be queued. Price crawling, bulk imports, AI extraction, indexing, upload processing and notifications use dedicated workers and resource limits. One worker failure must not make product browsing unavailable.
 
 Meaningful requests/jobs should carry correlation identifiers where practical so failures can be traced across API, queue, worker, adapter and database boundaries.
 
-## 8. Required change artifacts
+## 9. Required change artifacts
 Every non-trivial change includes:
 - code + tests
 - regression test for a bug fix where feasible
@@ -84,7 +97,7 @@ Every non-trivial change includes:
 - rollback note
 - troubleshooting knowledge entry when the resolved issue is likely to recur or teach future maintainers something important
 
-## 9. Prohibited shortcuts
+## 10. Prohibited shortcuts
 Do not:
 - create a second source of truth for convenience
 - bypass authorization with admin/service keys in user flows
@@ -98,7 +111,8 @@ Do not:
 - weaken security controls just to make a feature easier to implement
 - make broad speculative changes before localizing a failure
 - mix unrelated refactors into a feature or bug fix
+- let payments/sponsorship silently alter factual product truth or organic rankings
 - fork the application per country
 
-## 10. Definition of done
-A task is done only when behavior, tests, security baseline compliance, maintainability, observability, documentation, data migration, rollback, audit implications, and relevant troubleshooting knowledge are addressed.
+## 11. Definition of done
+A task is done only when behavior, tests, security baseline compliance, maintainability, observability, documentation, data migration, rollback, audit implications, relevant design/API contracts, and relevant troubleshooting knowledge are addressed.
