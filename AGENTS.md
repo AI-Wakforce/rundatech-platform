@@ -5,10 +5,11 @@ This file is the first document every AI agent must read before changing the Run
 ## 1. Authority order
 1. Security and legal policies, including `docs/security/SECURITY_BASELINE.md`
 2. Approved Architecture Decision Records (ADRs)
-3. This handbook
-4. Module-specific documentation
-5. User/task instructions
-6. Agent assumptions
+3. RundaTech design authority in `DESIGN.md` for UI work
+4. This handbook
+5. Module-specific documentation
+6. User/task instructions
+7. Agent assumptions
 
 If instructions conflict, stop the unsafe action and document the conflict.
 
@@ -16,6 +17,8 @@ No implementation may violate a **MUST** or **MUST NOT** control in `docs/securi
 
 ## 2. Before changing code
 - Read the module README, `docs/security/SECURITY_BASELINE.md`, and relevant ADRs.
+- For UI work, read `DESIGN.md` and `docs/design/DESIGN_SKILLS_REGISTRY.md` before external design guidance.
+- For newsroom/editorial work, read the relevant files under `docs/newsroom/` before implementation.
 - Identify impacted database tables, APIs, jobs, permissions, audit events, tests and documentation.
 - Prefer the smallest reversible change.
 - Do not introduce a new framework/library/service if an existing approved component solves the need.
@@ -58,11 +61,30 @@ No implementation may violate a **MUST** or **MUST NOT** control in `docs/securi
 - Object-level authorization must be enforced for resources addressed by ID.
 - Use idempotency keys for retried side-effecting integrations where duplicate execution is harmful.
 - External integrations are wrapped by adapters; core domain code must not depend directly on vendor SDK semantics.
+- Future commercial API access must remain scope-, quota-, audit-, and entitlement-aware without embedding billing rules into catalog logic.
 
 ## 7. Failure isolation
-Background jobs must not execute inside the request path when they can be queued. Price crawling, bulk imports, AI extraction, indexing, upload processing and notifications use dedicated workers and resource limits. One worker failure must not make product browsing unavailable.
+Background jobs must not execute inside the request path when they can be queued. Price crawling, bulk imports, AI extraction, indexing, upload processing, news monitoring, social publishing and notifications use dedicated workers and resource limits. One worker or provider failure must not make product browsing unavailable.
 
-## 8. Required change artifacts
+## 8. UI/design rules
+- `DESIGN.md` is the design authority.
+- External design skills are advisory and must be governed by `docs/design/DESIGN_SKILLS_REGISTRY.md`.
+- Do not blindly copy another site's identity, protected assets, layout, or brand language.
+- Accessibility, responsive behavior, performance and consistency are required.
+- Use browser automation/regression tests for critical stable UI flows where practical.
+
+## 9. Newsroom/editorial rules
+- Discovery is not verification.
+- Prefer primary evidence for material factual claims and preserve source provenance.
+- Do not turn another publisher's article into an automated rewrite.
+- AI may research, extract, classify, draft, summarize and propose social variants, but unsupported facts must remain unpublished/unverified.
+- Do not fabricate quotes, sources, interviews, prices, specifications, dates, funding amounts or eyewitness reporting.
+- External images require documented usage rights; attribution alone is not permission.
+- If image rights are unknown, do not publish the asset. Use an approved RundaTech-owned/branded fallback where appropriate.
+- Sensitive, breaking, legal/regulatory, allegation, security, rumor/leak and other high-risk stories require human approval unless a later bounded policy explicitly permits automation.
+- Social publishing uses provider adapters, scoped credentials, auditability, idempotency and isolated failure handling.
+
+## 10. Required change artifacts
 Every non-trivial change includes:
 - code + tests
 - migration if data changes
@@ -72,7 +94,7 @@ Every non-trivial change includes:
 - security impact note if permissions, secrets, external calls, uploads, AI tools or sensitive data change
 - rollback note
 
-## 9. Prohibited shortcuts
+## 11. Prohibited shortcuts
 Do not:
 - create a second source of truth for convenience
 - bypass authorization with admin/service keys in user flows
@@ -84,7 +106,8 @@ Do not:
 - return full database rows to clients without an explicit response contract
 - accept unrestricted uploads
 - weaken security controls just to make a feature easier to implement
+- scrape/copy media or editorial content without a documented lawful/contractual rights basis
 - fork the application per country
 
-## 10. Definition of done
-A task is done only when behavior, tests, security baseline compliance, observability, documentation, data migration, rollback, and audit implications are addressed.
+## 12. Definition of done
+A task is done only when behavior, tests, security baseline compliance, observability, documentation, data migration, rollback, audit implications, and any relevant design/editorial/media-rights rules are addressed.
