@@ -1,5 +1,8 @@
 # Handbook Changelog
 
+## 0.2.0 — 2026-09-02
+Added RundaTech design governance, external design-skill registry, monetization/API ecosystem architecture, AI-assisted newsroom architecture, solo-newsroom workflow, News Radar source policy, editorial/AI rules, media-rights and asset provenance policy, and social distribution architecture. Updated `AGENTS.md` so future AI/code work must respect design authority, source verification, image rights, human editorial approval, adapter-based social publishing, and commercial API boundaries.
+
 ## 0.1.1 — 2026-09-02
 Security hardening: added the mandatory `docs/security/SECURITY_BASELINE.md` with numbered controls for secrets, authentication/session security, login rate limiting, bot protection, server-side authorization, RLS, field tampering, parameterized queries, encryption, input/output handling, file uploads, HTTPS/security headers, CSRF/CORS, API abuse, SSRF, dependency/container scanning, logging/auditing, AI/agent boundaries, workload isolation, backups, and security exception governance. Updated `AGENTS.md` and the implementation checklist so future AI/code changes must comply with the baseline.
 
